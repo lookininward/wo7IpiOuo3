@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>wo7IpiOuo3 Challenge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Inter:400,700"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        /* Colors */
+        --color-black: #00000;
+        --color-white: #ffffff;
+        --color-grey: #e5e5e5;
+        --color-purple: #7e34f7;
+        --color-blue: #4b587c;
+      }
+
+      .container {
+        width: auto;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        border: 1px solid var(--color-black);
+        padding: 0 10px;
+        white-space: wrap;
+      }
+
+      @media (min-width: 640px) {
+        .container {
+          width: 50vw;
+          max-width: 800px;
+          padding: 30px 50px;
+          margin: 0 auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <style>
+        .header {
+          font-family: "Inter";
+          font-style: normal;
+          font-weight: 700;
+          font-size: 18px;
+          line-height: 22px;
+          color: var(--color-black);
+          margin-bottom: 30px;
+        }
+      </style>
+      <h1 class="header">Discussion</h1>
+
+      <style>
+        .add-comment-container {
+          width: 100%;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 25px;
+        }
+
+        @media (min-width: 640px) {
+          .add-comment-container {
+            margin-bottom: 45px;
+          }
+        }
+
+        .add-comment-container .avatar,
+        .add-comment-container .comment-input {
+          margin-right: 12px;
+        }
+      </style>
+      <form action="/add-comment" method="POST" class="add-comment-container">
+        <style>
+          .avatar {
+            width: 30px;
+            height: 30px;
+            min-width: 30px;
+            min-height: 30px;
+            border-radius: 50%;
+            background: url("https://images.pexels.com/photos/12099017/pexels-photo-12099017.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260")
+              center no-repeat;
+          }
+
+          .avatar.avatar--rob {
+            background: url("img/rob.png") center no-repeat;
+          }
+
+          .avatar.avatar--sophie {
+            background: url("img/sophie.png") center no-repeat;
+          }
+
+          .avatar.avatar--james {
+            background: url("img/james.png") center no-repeat;
+          }
+
+          .avatar.avatar--cameron {
+            background: url("img/cameron.png") center no-repeat;
+          }
+        </style>
+        <div class="avatar avatar--rob"></div>
+
+        <style>
+          .comment-input {
+            padding: 8px 10px;
+            width: 100%;
+            background: var(--color-white);
+            border: 1px solid var(--color-grey);
+            border-radius: 4px;
+          }
+        </style>
+        <input
+          class="comment-input"
+          type="text"
+          name="comment"
+          placeholder="What are your thoughts?"
+        />
+
+        <style>
+          .comment-btn {
+            padding: 8px 12px;
+            background: var(--color-purple);
+            border-radius: 4px;
+            color: #fff;
+            font-family: "Inter";
+            font-style: normal;
+            font-weight: 700;
+            font-size: 11px;
+            line-height: 150.02%;
+            text-align: center;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+          }
+        </style>
+        <button class="comment-btn" type="submit" name="submit">Comment</button>
+      </form>
+
+      <style>
+        .divider {
+          border: none;
+          width: 100%;
+          height: 1px;
+          background-color: var(--color-grey);
+          margin-bottom: 25px;
+        }
+
+        @media (min-width: 640px) {
+          .divider {
+            margin-bottom: 45px;
+          }
+        }
+      </style>
+      <hr class="divider" />
+
+      <style>
+        .comment {
+          font-family: "Inter";
+          font-style: normal;
+          font-weight: 400;
+          font-size: 13px;
+          line-height: 20px;
+
+          color: #21293c;
+          margin: 0;
+          margin-top: 5px;
+          margin-bottom: 15px;
+        }
+
+        .comment-actions {
+          display: flex;
+          align-items: center;
+
+          font-family: "Inter";
+          font-style: normal;
+          font-weight: 600;
+          font-size: 11px;
+          line-height: 13px;
+          display: flex;
+          align-items: center;
+
+          color: var(--color-blue);
+        }
+
+        .upvote {
+          margin-right: 20px;
+          cursor: pointer;
+
+          display: flex;
+        }
+
+        .upvote-icon {
+          color: transparent;
+          text-shadow: 0 0 0 var(--color-blue);
+          margin-right: 4px;
+        }
+
+        .reply {
+          cursor: pointer;
+        }
+      </style>
+
+      <style>
+        .comments-container {
+          display: flex;
+          flex-direction: column;
+        }
+      </style>
+      <div class="comments-container">
+        <style>
+          .comment-container {
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 30px;
+            position: relative;
+          }
+
+          .comment-container .comment-container {
+            margin: 30px 0;
+          }
+
+          .comment-container .comment-container:last-child {
+            margin: 30px 0 0 0;
+          }
+
+          .comment-container .avatar {
+            z-index: 1;
+          }
+        </style>
+        <div class="comment-container">
+          <style>
+            .avatar-container {
+              position: relative;
+              display: flex;
+              align-items: flex-start;
+              justify-content: center;
+              margin-right: 12px;
+            }
+
+            .avatar-container__reply-line {
+              position: absolute;
+              left: 50%;
+              transform: translate(-50%, 0%);
+              width: 2px;
+              height: 100%;
+              background-color: #eaeaea;
+              z-index: 0;
+            }
+          </style>
+          <div class="avatar-container">
+            <div class="avatar avatar--rob"></div>
+          </div>
+          <div class="comment-content">
+            <style>
+              .comment-content-header {
+                display: flex;
+                align-items: center;
+              }
+
+              .comment-username {
+                font-family: "Inter";
+                font-style: normal;
+                font-weight: 600;
+                font-size: 13px;
+                line-height: 16px;
+                color: #21293c;
+              }
+
+              .comment-content-header-divider {
+                margin: 0 8px;
+                font-size: 10px;
+                color: var(--color-blue);
+              }
+
+              .comment-time {
+                font-family: "Inter";
+                font-style: normal;
+                font-weight: 400;
+                font-size: 11px;
+                line-height: 13px;
+                color: var(--color-blue);
+              }
+            </style>
+            <div class="comment-content-header">
+              <div class="comment-username">Rob Hope</div>
+              <span class="comment-content-header-divider">•</span>
+              <div class="comment-time">45 min ago</div>
+            </div>
+            <p class="comment">
+              Jeepers now that's a huge release with some big community earnings
+              to back it - it must be so rewarding seeing creators quit their
+              day jobs after monetizing (with real MRR) on the new platform.
+            </p>
+            <div class="comment-actions">
+              <div class="upvote">
+                <div class="upvote-icon">&#9650;</div>
+                Upvote
+              </div>
+              <div class="reply">Reply</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="comment-container comment-container--has-replies">
+          <div class="avatar-container">
+            <div class="avatar avatar--sophie"></div>
+
+            <div class="avatar-container__reply-line"></div>
+          </div>
+          <div class="comment-content">
+            <div class="comment-content-header">
+              <div class="comment-username">Sophie Brecht</div>
+              <span class="comment-content-header-divider">•</span>
+              <div class="comment-time">Yesterday</div>
+            </div>
+            <p class="comment">
+              Switched our blog from Hubspot to Ghost a year ago -- turned out
+              to be a great decision. Looking forward to this update....the
+              in-platform analytics look especially delicious. :)
+            </p>
+            <div class="comment-actions">
+              <div class="upvote">
+                <div class="upvote-icon">&#9650;</div>
+                Upvote
+              </div>
+              <div class="reply">Reply</div>
+            </div>
+
+            <div class="comment-container">
+              <div class="avatar-container">
+                <div class="avatar avatar--james"></div>
+              </div>
+              <div class="comment-content">
+                <div class="comment-content-header">
+                  <div class="comment-username">James</div>
+                  <span class="comment-content-header-divider">•</span>
+                  <div class="comment-time">2 hrs ago</div>
+                </div>
+                <p class="comment">
+                  Thanks Sophie! Last year has been an absolute goldrush for the
+                  creator economy. Slowly at first, then all at once. Will be
+                  interesting to see how this ecosystem evolves over the next
+                  few years
+                </p>
+                <div class="comment-actions">
+                  <div class="upvote">
+                    <div class="upvote-icon">&#9650;</div>
+                    Upvote
+                  </div>
+                  <div class="reply">Reply</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="comment-container">
+          <div class="avatar-container">
+            <div class="avatar avatar--cameron"></div>
+          </div>
+          <div class="comment-content">
+            <div class="comment-content-header">
+              <div class="comment-username">Cameron Lawrence</div>
+              <span class="comment-content-header-divider">•</span>
+              <div class="comment-time">3 weeks ago</div>
+            </div>
+            <p class="comment">
+              Love the native memberships and the zipless themes, I was just
+              asked by a friend about options for a new site, and I think I know
+              what I'll be recommending then...
+            </p>
+            <div class="comment-actions">
+              <div class="upvote">
+                <div class="upvote-icon">&#9650;</div>
+                Upvote
+              </div>
+              <div class="reply">Reply</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p></p>
+  </body>
+</html>
