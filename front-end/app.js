@@ -161,7 +161,7 @@ const setupReplyListeners = () =>
         >
             <input
                 id="${commentId}-comment-text"
-                class="input"
+                class="text-input"
                 type="text"
                 name="reply"
                 placeholder=""
