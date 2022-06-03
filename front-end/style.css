@@ -225,3 +225,10 @@ body {
 .comment__reply {
   cursor: pointer;
 }
+
+/* Admin */
+.admin {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
