@@ -44,5 +44,22 @@
       <div id="comment-list" class="comment-list"></div>
     </div>
     <script src="app.js"></script>
+
+    <div class="admin">
+      <button id="reset" class="btn btn--purple">Reset DB</button>
+    </div>
+    <script>
+      const reset = async () => {
+        try {
+          await axios.post(`${BASE_URL}/reset`);
+          await getDiscussion();
+        } catch (e) {
+          console.error("Failed to reset db", e);
+        }
+      };
+
+      const resetBtn = document.getElementById("reset");
+      resetBtn.addEventListener("click", reset);
+    </script>
   </body>
 </html>
