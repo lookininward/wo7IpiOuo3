@@ -26,11 +26,10 @@ const connection = mysql.createConnection({
 
 const sessionUser = demo.USERS[0];
 
-const clearComments = async (comments) => {
+const clearComments = () =>
   new Promise((resolve) =>
-    connection.query(`DELETE FROM comments `, (_, result) => resolve(result))
+    connection.query(`DELETE FROM comments`, (_, result) => resolve(result))
   );
-};
 
 const getSessionUser = () =>
   new Promise((resolve) =>
