@@ -7,16 +7,6 @@ const USERS = [
     name: "Rob Hope",
     avatar: "rob",
   },
-  {
-    id: 2,
-    name: "Sophie Brecht",
-    avatar: "sophie",
-  },
-  {
-    id: 3,
-    name: "Sophie Brecht",
-    avatar: "sophie",
-  },
 ];
 
 const deleteDB = (connection) =>
