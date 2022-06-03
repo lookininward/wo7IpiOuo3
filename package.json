@@ -1,0 +1,31 @@
+{
+  "name": "ghost",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "frontend:run": "npx http-server ./front-end -p 4200",
+    "backend:run": "node ./back-end/app.js",
+    "app:start": "npm run backend:run & npm run frontend:run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lookininward/wo7IpiOuo3.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lookininward/wo7IpiOuo3/issues"
+  },
+  "homepage": "https://github.com/lookininward/wo7IpiOuo3#readme",
+  "devDependencies": {
+    "http-server": "^14.1.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.2",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mysql2": "^2.3.3"
+  }
+}
