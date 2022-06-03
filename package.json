@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "frontend:run": "npx http-server ./front-end -p 4200",
+    "backend:seed": "node seed.js",
     "backend:run": "node ./back-end/app.js",
-    "app:start": "npm run backend:run & npm run frontend:run"
+    "frontend:run": "npx http-server ./front-end -p 4200",
+    "app:start": "npm run backend:seed && npm run backend:run & npm run frontend:run"
   },
   "repository": {
     "type": "git",
