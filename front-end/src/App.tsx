@@ -30,9 +30,9 @@ function App() {
   return (
     <div className="container">
       <h1 className="header">Discussion</h1>
-      {user ? <AddCommentForm user={user} /> : <div>Loading...</div>}
+      <AddCommentForm user={user} />
       <hr className="divider" />
-      {comments ? <CommentList comments={comments} /> : <div>Loading...</div>}
+      <CommentList comments={comments} />
       <Admin />
     </div>
   );

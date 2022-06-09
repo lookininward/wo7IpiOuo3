@@ -49,21 +49,31 @@ function AddCommentForm({
           "avatar-container--active": isActive,
         })}
       >
-        <img src={`${user?.avatar}`} alt="userAvatar" />
+        {user ? (
+          <img src={`${user?.avatar}`} alt="userAvatar" />
+        ) : (
+          <div className="avatar-skeleton" />
+        )}
       </div>
-      <input
-        ref={textInput}
-        id="comment-text"
-        className="text-input"
-        type="text"
-        name="comment"
-        placeholder="What are your thoughts?"
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        onFocus={() => setIsActive(true)}
-        onBlur={(e) => setIsActive(false)}
-        required
-      />
+
+      {user ? (
+        <input
+          ref={textInput}
+          id="comment-text"
+          className="text-input"
+          type="text"
+          name="comment"
+          placeholder="What are your thoughts?"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          onFocus={() => setIsActive(true)}
+          onBlur={() => setIsActive(false)}
+          required
+        />
+      ) : (
+        <div className="text-input-skeleton"></div>
+      )}
+
       <button className="btn btn--purple" type="submit" name="submit">
         Comment
       </button>
