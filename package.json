@@ -6,7 +6,7 @@
   "scripts": {
     "backend:seed": "node seed.js",
     "backend:run": "node ./back-end/app.js",
-    "frontend:run": "npx http-server ./front-end -p 4200",
+    "frontend:run": "yarn workspace front-end run start",
     "app:start": "yarn run backend:seed && yarn run backend:run & yarn run frontend:run"
   },
   "repository": {

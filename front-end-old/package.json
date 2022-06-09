@@ -1,0 +1,10 @@
+{
+  "name": "front-end-old",
+  "version": "1.0.0",
+  "dependencies": {
+    "cross-env": "5.0.5"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.0"
+  }
+}
