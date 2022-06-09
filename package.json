@@ -6,8 +6,8 @@
   "scripts": {
     "backend:seed": "node seed.js",
     "backend:run": "node ./back-end/app.js",
-    "frontend:run": "npx http-server ./front-end -p 4200",
-    "app:start": "npm run backend:seed && npm run backend:run & npm run frontend:run"
+    "frontend:run": "yarn workspace front-end run start",
+    "app:start": "yarn run backend:seed && yarn run backend:run & yarn run frontend:run"
   },
   "repository": {
     "type": "git",
@@ -19,14 +19,11 @@
     "url": "https://github.com/lookininward/wo7IpiOuo3/issues"
   },
   "homepage": "https://github.com/lookininward/wo7IpiOuo3#readme",
-  "devDependencies": {
-    "http-server": "^14.1.0"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dayjs": "^1.11.2",
-    "dotenv": "^16.0.1",
-    "express": "^4.18.1",
-    "mysql2": "^2.3.3"
-  }
+  "devDependencies": {},
+  "dependencies": {},
+  "private": true,
+  "workspaces": [
+    "back-end",
+    "front-end"
+  ]
 }
