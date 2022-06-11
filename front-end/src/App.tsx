@@ -4,6 +4,7 @@ import CommentList from "./components/CommentList";
 import Admin from "./components/Admin";
 import { getUser, getComments } from "./api";
 import { UserType, CommentType } from "./types";
+import { UserContext } from "./contexts";
 import "./App.css";
 
 function App() {
@@ -29,11 +30,13 @@ function App() {
 
   return (
     <div className="container">
-      <h1 className="header">Discussion</h1>
-      <AddCommentForm user={user} />
-      <hr className="divider" />
-      <CommentList comments={comments} />
-      <Admin />
+      <UserContext.Provider value={user}>
+        <h1 className="header">Discussion</h1>
+        <AddCommentForm />
+        <hr className="divider" />
+        <CommentList comments={comments} />
+        <Admin />
+      </UserContext.Provider>
     </div>
   );
 }

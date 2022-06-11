@@ -3,17 +3,15 @@ import classNames from "classnames";
 import ClickAwayListener from "react-click-away-listener";
 import AddCommentForm from "./AddCommentForm";
 import CommentList from "./CommentList";
-import { getUser, upvoteComment } from "../api";
-import { UserType, CommentType } from "../types";
+import { upvoteComment } from "../api";
+import { CommentType } from "../types";
 
 function Comment({ comment }: { comment: CommentType }) {
   const [hasReplies, setHasReplies] = useState(false);
   const [hasUpvotes, setHasUpvotes] = useState<boolean>(false);
   const [isReplying, setIsReplying] = useState<boolean>(false);
-  const [user, setUser] = useState<UserType>(); // todo: global user state
 
   useEffect(() => {
-    getUser().then((user) => setUser(user));
     setHasReplies(comment.replies.length > 0);
     setHasUpvotes(comment.upvotes.length > 0);
   }, [comment]);
@@ -63,7 +61,7 @@ function Comment({ comment }: { comment: CommentType }) {
           {isReplying && (
             <ClickAwayListener onClickAway={() => setIsReplying(false)}>
               <div className="add-reply">
-                <AddCommentForm user={user} pId={comment.id} isReply />
+                <AddCommentForm pId={comment.id} isReply />
               </div>
             </ClickAwayListener>
           )}

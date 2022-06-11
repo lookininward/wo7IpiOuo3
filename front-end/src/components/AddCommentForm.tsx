@@ -1,17 +1,11 @@
-import { useState, useEffect, useRef, SyntheticEvent } from "react";
+import { useState, useEffect, useRef, useContext, SyntheticEvent } from "react";
 import classNames from "classnames";
 import { UserType } from "../types";
 import { addComment } from "../api";
+import { UserContext } from "../contexts";
 
-function AddCommentForm({
-  user,
-  pId,
-  isReply,
-}: {
-  user?: UserType;
-  pId?: string;
-  isReply?: boolean;
-}) {
+function AddCommentForm({ pId, isReply }: { pId?: string; isReply?: boolean }) {
+  const user = useContext(UserContext) as UserType;
   const [threadId] = useState<string>("1");
   const [parentId] = useState<string | undefined>(pId);
   const [commentText, setCommentText] = useState<string>("");
