@@ -1,6 +1,6 @@
+import { useState, useEffect, useRef, SyntheticEvent } from "react";
 import classNames from "classnames";
-import React from "react";
-import { User } from "../types";
+import { UserType } from "../types";
 import { addComment } from "../api";
 
 function AddCommentForm({
@@ -8,23 +8,23 @@ function AddCommentForm({
   pId,
   isReply,
 }: {
-  user?: User;
+  user?: UserType;
   pId?: string;
   isReply?: boolean;
 }) {
-  const [threadId] = React.useState<string>("1");
-  const [parentId] = React.useState<string | undefined>(pId);
-  const [comment, setComment] = React.useState("");
-  const [isActive, setIsActive] = React.useState(false);
+  const [threadId] = useState<string>("1");
+  const [parentId] = useState<string | undefined>(pId);
+  const [commentText, setCommentText] = useState<string>("");
+  const [isActive, setIsActive] = useState<boolean>(false);
 
-  const onAddComment = async (event: any) => {
+  const onAddComment = async (event: SyntheticEvent) => {
     event.preventDefault();
-    await addComment({ threadId, parentId, text: comment });
+    await addComment({ threadId, parentId, text: commentText });
   };
 
-  const textInput = React.useRef<HTMLInputElement>(null);
+  const textInput = useRef<HTMLInputElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isReply && textInput.current) {
       textInput.current.focus();
     }
@@ -32,8 +32,6 @@ function AddCommentForm({
 
   return (
     <form
-      id="add-comment-form"
-      action="http://localhost:3000/add-comment"
       method="POST"
       className={classNames({
         "add-comment": true,
@@ -43,29 +41,40 @@ function AddCommentForm({
       autoComplete="off"
     >
       <div
-        id="currentUser"
         className={classNames({
           "avatar-container": true,
           "avatar-container--active": isActive,
         })}
       >
-        <img src={`${user?.avatar}`} alt="userAvatar" />
+        {user ? (
+          <img
+            className="avatar-img"
+            src={`${user?.avatar}`}
+            alt="userAvatar"
+          />
+        ) : (
+          <div className="avatar-skeleton" />
+        )}
       </div>
-      <input
-        ref={textInput}
-        id="comment-text"
-        className="text-input"
-        type="text"
-        name="comment"
-        placeholder="What are your thoughts?"
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        onFocus={() => setIsActive(true)}
-        onBlur={(e) => setIsActive(false)}
-        required
-      />
+      {user ? (
+        <input
+          ref={textInput}
+          id="comment-text"
+          className="text-input"
+          type="text"
+          name="comment"
+          placeholder="What are your thoughts?"
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
+          onFocus={() => setIsActive(true)}
+          onBlur={() => setIsActive(false)}
+          required
+        />
+      ) : (
+        <div className="text-input-skeleton"></div>
+      )}
       <button className="btn btn--purple" type="submit" name="submit">
-        Comment
+        {isReply ? "Reply" : "Comment"}
       </button>
     </form>
   );

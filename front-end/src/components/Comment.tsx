@@ -4,16 +4,13 @@ import ClickAwayListener from "react-click-away-listener";
 import AddCommentForm from "./AddCommentForm";
 import CommentList from "./CommentList";
 import { getUser, upvoteComment } from "../api";
+import { UserType, CommentType } from "../types";
 
-function Comment({ comment }: { comment: any }) {
+function Comment({ comment }: { comment: CommentType }) {
   const [hasReplies, setHasReplies] = useState(false);
-  const [hasUpvotes, setHasUpvotes] = useState(false);
-  const [isReplying, setIsReplying] = useState(false);
-  const [user, setUser] = useState(); // todo: global user state
-
-  const replyToComment = async () => {
-    setIsReplying(!isReplying);
-  };
+  const [hasUpvotes, setHasUpvotes] = useState<boolean>(false);
+  const [isReplying, setIsReplying] = useState<boolean>(false);
+  const [user, setUser] = useState<UserType>(); // todo: global user state
 
   useEffect(() => {
     getUser().then((user) => setUser(user));
@@ -29,7 +26,11 @@ function Comment({ comment }: { comment: any }) {
       })}
     >
       <div className="avatar-container">
-        <img src={comment.user.avatar} alt={`${comment.user.name}-avatar`} />
+        <img
+          className="avatar-img"
+          src={comment.user.avatar}
+          alt={`${comment.user.name}-avatar`}
+        />
         {hasReplies && <div className="avatar-container__reply-line"></div>}
       </div>
 
@@ -53,7 +54,7 @@ function Comment({ comment }: { comment: any }) {
             <div
               id={`reply-${comment.id}`}
               className="comment__reply"
-              onClick={replyToComment}
+              onClick={() => setIsReplying(!isReplying)}
             >
               Reply
             </div>
