@@ -3,20 +3,20 @@ import AddCommentForm from "./components/AddCommentForm";
 import CommentList from "./components/CommentList";
 import Admin from "./components/Admin";
 import { getUser, getComments } from "./api";
-import { User } from "./types";
+import { UserType, CommentType } from "./types";
 import "./App.css";
 
 function App() {
-  const [user, setUser] = useState<User | undefined>();
-  const [comments, setComments] = useState([]);
+  const [user, setUser] = useState<UserType>();
+  const [comments, setComments] = useState<CommentType[]>([]);
 
   const onGetUser = async () => {
-    const user = await getUser();
+    const user: UserType = await getUser();
     setUser(user);
   };
 
   const onGetComments = async () => {
-    const comments = await getComments();
+    const comments: CommentType[] = await getComments();
     setComments(comments);
   };
 
@@ -24,7 +24,7 @@ function App() {
     setTimeout(() => {
       onGetUser();
       onGetComments();
-    }, 500);
+    }, 500); // simulate page load to show skeletons
   }, []);
 
   return (

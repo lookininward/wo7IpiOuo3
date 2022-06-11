@@ -1,7 +1,8 @@
 import Comment from "./Comment";
+import { CommentType } from "../types";
+import { getRandomNumber } from "../utils";
 
-const getRandomNumber = () => ((Math.random() * 3) | 0) + 1;
-function CommentList({ comments }: { comments: any[] }) {
+function CommentList({ comments }: { comments: CommentType[] }) {
   return (
     <>
       {comments.length ? (
@@ -12,15 +13,16 @@ function CommentList({ comments }: { comments: any[] }) {
         </div>
       ) : (
         <div className="comment-list comment-list--skeleton">
-          {Array.from({ length: getRandomNumber() }).map((i) => (
-            <div className="comment comment--skeleton">
-              <div className="avatar-container">
-                <div className="avatar-skeleton" />
-              </div>
+          {Array.from({ length: getRandomNumber() }).map((_, i) => (
+            <div key={`${i}-comment`} className="comment comment--skeleton">
+              <div className="avatar-skeleton" />
               <div className="comment__body">
                 <div className="comment__header comment__header--skeleton" />
-                {Array.from({ length: getRandomNumber() }).map((i) => (
-                  <div className="comment__text comment__text--skeleton" />
+                {Array.from({ length: getRandomNumber() }).map((_, x) => (
+                  <div
+                    key={`${x}-comment-text`}
+                    className="comment__text comment__text--skeleton"
+                  />
                 ))}
                 <div className="comment__actions comment__actions--skeleton" />
               </div>
