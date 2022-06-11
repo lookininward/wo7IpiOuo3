@@ -1,21 +1,26 @@
-require("dotenv").config();
+import * as dotenv from "dotenv";
+import mysql from "mysql2";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import express from "express";
+import demo from "./demo";
+import {
+  SQLUserType,
+  SQLCommentType,
+  SQLUserThreadsType,
+  CommentType,
+} from "./types";
 
-const demo = require("./demo");
-
-const dayjs = require("dayjs");
-const relativeTime = require("dayjs/plugin/relativeTime");
+dotenv.config({ path: "../.env" });
 dayjs.extend(relativeTime);
 
 const cors = require("cors");
-const express = require("express");
 const app = express();
 const port = 3000;
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-const mysql = require("mysql2");
 
 const connection = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -28,57 +33,72 @@ const sessionUser = demo.USERS[0];
 
 const clearComments = () =>
   new Promise((resolve) =>
-    connection.query(`DELETE FROM comments`, (_, result) => resolve(result))
+    connection.query(
+      `DELETE FROM comments`,
+      (_: mysql.QueryError, result: mysql.RowDataPacket) => resolve(result)
+    )
   );
 
 const getSessionUser = () =>
   new Promise((resolve) =>
     connection.query(
       `SELECT * FROM users WHERE id = ${sessionUser.id}`,
-      (_, result) => resolve(result[0])
+      (_: mysql.QueryError, result: mysql.RowDataPacket) =>
+        resolve(result[0] as SQLUserType)
     )
   );
 
-const getUser = (userId) =>
+const getUser = (userId: string) =>
   new Promise((resolve) =>
-    connection.query(`SELECT * FROM users WHERE id = ${userId}`, (_, result) =>
-      resolve(result[0])
+    connection.query(
+      `SELECT * FROM users WHERE id = ${userId}`,
+      (_: mysql.QueryError, result: mysql.RowDataPacket) =>
+        resolve(result[0] as SQLUserType)
     )
   );
 
-const getUserThreads = (userId) =>
+const getUserThreads = (userId: string) =>
   new Promise((resolve) =>
     connection.query(
       `SELECT * FROM threads WHERE user_id = ${userId}`,
-      (_, result) => resolve(result)
+      (_: mysql.QueryError, result: mysql.RowDataPacket) => resolve(result)
     )
   );
 
-const getThreadComments = (threadId) =>
+const getThreadComments = (threadId: string) =>
   new Promise((resolve) =>
     connection.query(
       `SELECT * FROM comments WHERE thread_id = ${threadId} AND parent_id IS NULL`,
-      (_, result) => resolve(result)
+      (_: mysql.QueryError, result: mysql.RowDataPacket) => resolve(result)
     )
   );
 
-const getReplies = (commentId) =>
+const getReplies = (commentId: string) =>
   new Promise((resolve) =>
     connection.query(
       `SELECT * FROM comments WHERE parent_id = ${commentId}`,
-      (_, result) => resolve(result)
+      (_: mysql.QueryError, result: mysql.RowDataPacket) => resolve(result)
     )
   );
 
-const getComment = (commentId) =>
+const getComment = (commentId: string) =>
   new Promise((resolve) =>
     connection.query(
       `SELECT * FROM comments WHERE id = ${commentId}`,
-      (_, result) => resolve(result[0])
+      (_: mysql.QueryError, result: mysql.RowDataPacket) =>
+        resolve(result[0] as SQLCommentType)
     )
   );
 
-const addComment = ({ threadId, parentId, text }) =>
+const addComment = ({
+  threadId,
+  parentId,
+  text,
+}: {
+  threadId: string;
+  parentId: string;
+  text: string;
+}) =>
   new Promise((resolve) => {
     connection.query(
       `
@@ -99,12 +119,11 @@ const addComment = ({ threadId, parentId, text }) =>
                 '[]'
             )
         `,
-      (_, result) => resolve(result)
+      (_: mysql.QueryError, result: mysql.RowDataPacket) => resolve(result)
     );
   });
 
-// todo: do not add if userId is in upvotes array
-const upvoteComment = (commentId) =>
+const upvoteComment = (commentId: string) =>
   new Promise((resolve) => {
     connection.query(
       `
@@ -117,7 +136,7 @@ const upvoteComment = (commentId) =>
         WHERE id = ${commentId}
         AND NOT JSON_CONTAINS(upvotes, "${sessionUser.id}")
       `,
-      (err, result) => {
+      (err: mysql.QueryError, result: mysql.RowDataPacket) => {
         if (err) {
           console.log(err);
         }
@@ -126,7 +145,7 @@ const upvoteComment = (commentId) =>
     );
   });
 
-const removeCommentUpvote = (commentId) =>
+const removeCommentUpvote = (commentId: string) =>
   new Promise((resolve) => {
     connection.query(
       `
@@ -137,7 +156,7 @@ const removeCommentUpvote = (commentId) =>
         )
         WHERE id = ${commentId}
       `,
-      (err, result) => {
+      (err: mysql.QueryError, result: mysql.RowDataPacket) => {
         if (err) {
           console.log(err);
         }
@@ -146,12 +165,12 @@ const removeCommentUpvote = (commentId) =>
     );
   });
 
-const mapComments = async (comments) =>
+const mapComments = async (comments: SQLCommentType[]) =>
   await Promise.all(
-    comments.map(async (comment) => {
+    comments.map(async (comment: SQLCommentType) => {
       const commentUser = await getUser(comment.user_id);
-      const replies = await getReplies(comment.id);
-      const mappedReplies = await mapComments(replies);
+      const replies = (await getReplies(comment.id)) as SQLCommentType[];
+      const mappedReplies: CommentType[] = await mapComments(replies);
       return {
         id: comment.id,
         user: commentUser,
@@ -159,16 +178,20 @@ const mapComments = async (comments) =>
         time: dayjs(comment.created_at).fromNow(),
         replies: [...mappedReplies],
         upvotes: [...comment.upvotes],
-      };
+      } as CommentType;
     })
   );
 
-app.get("/", async (_, res) => {
+app.get("/", async (_: express.Request, res: express.Response) => {
   try {
-    const sessionUser = await getSessionUser();
-    const userThreads = await getUserThreads(sessionUser.id);
-    const thread = userThreads[0]; // todo: handle multiple threads
-    const threadComments = await getThreadComments(thread.id);
+    const sessionUser = (await getSessionUser()) as SQLUserType;
+    const userThreads = (await getUserThreads(
+      sessionUser.id
+    )) as SQLUserThreadsType[];
+    const thread = userThreads[0]; // return first thread for demo
+    const threadComments = (await getThreadComments(
+      thread.id
+    )) as SQLCommentType[];
     const comments = await mapComments(threadComments);
     res.send(comments);
   } catch (e) {
@@ -177,7 +200,7 @@ app.get("/", async (_, res) => {
   }
 });
 
-app.get("/user", async (_, res) => {
+app.get("/user", async (_: express.Request, res: express.Response) => {
   try {
     const user = await getSessionUser();
     res.send(user);
@@ -187,32 +210,40 @@ app.get("/user", async (_, res) => {
   }
 });
 
-app.post("/add-comment", async (req, res) => {
-  const { threadId, parentId, text } = req.body;
-  try {
-    await addComment({ threadId, parentId, text });
-    res.send("Added comment");
-  } catch (e) {
-    console.log("Failed to add comment", e);
-    res.send("Failed to add comment");
+app.post(
+  "/add-comment",
+  async (req: express.Request, res: express.Response) => {
+    const { threadId, parentId, text } = req.body;
+    try {
+      await addComment({ threadId, parentId, text });
+      res.send("Added comment");
+    } catch (e) {
+      console.log("Failed to add comment", e);
+      res.send("Failed to add comment");
+    }
   }
-});
+);
 
-app.post("/upvote-comment", async (req, res) => {
-  const { commentId } = req.body;
-  const { upvotes } = await getComment(commentId);
-  const hasUpvote = upvotes.some((id) => id === sessionUser.id.toString());
+app.post(
+  "/upvote-comment",
+  async (req: express.Request, res: express.Response) => {
+    const { commentId } = req.body;
+    const { upvotes } = (await getComment(commentId)) as SQLCommentType;
+    const hasUpvote = upvotes.some(
+      (id: string) => id === sessionUser.id.toString()
+    );
 
-  if (!hasUpvote) {
-    await upvoteComment(commentId);
-  } else {
-    await removeCommentUpvote(commentId);
+    if (!hasUpvote) {
+      await upvoteComment(commentId);
+    } else {
+      await removeCommentUpvote(commentId);
+    }
+
+    res.send("success");
   }
+);
 
-  res.send("success");
-});
-
-app.post("/reset", async (req, res) => {
+app.post("/reset", async (_: express.Request, res: express.Response) => {
   try {
     await clearComments();
     await demo.setupDB(connection, {
