@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { io } from "socket.io-client";
 import AddCommentForm from "./components/AddCommentForm";
 import CommentList from "./components/CommentList";
 import Admin from "./components/Admin";
@@ -22,6 +23,10 @@ function App() {
   };
 
   useEffect(() => {
+    const socket = io(`${process.env.REACT_APP_API_URL}`);
+    const events = ["comment:add", "comment:upvote", "reset"];
+    events.forEach((event) => socket.on(event, () => onGetComments()));
+
     setTimeout(() => {
       onGetUser();
       onGetComments();
