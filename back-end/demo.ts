@@ -1,29 +1,33 @@
-require("dotenv").config();
-const mysql = require("mysql2");
+import * as dotenv from "dotenv";
+import mysql from "mysql2";
+
+dotenv.config();
 
 const USERS = [
   {
-    id: 1,
+    id: "1",
     name: "Rob Hope",
     avatar: "rob",
   },
 ];
 
-const deleteDB = (connection) =>
+const deleteDB = (connection: mysql.Connection) =>
   new Promise((resolve) =>
-    connection.query(`DROP DATABASE ${process.env.DB_NAME}`, (_, result) =>
-      resolve(result)
+    connection.query(
+      `DROP DATABASE ${process.env.DB_NAME}`,
+      (_: mysql.QueryError, result: mysql.RowDataPacket) => resolve(result)
     )
   );
 
-const createNewDB = (connection) =>
+const createNewDB = (connection: mysql.Connection) =>
   new Promise((resolve) =>
-    connection.query(`CREATE DATABASE ${process.env.DB_NAME}`, (_, result) =>
-      resolve(result)
+    connection.query(
+      `CREATE DATABASE ${process.env.DB_NAME}`,
+      (_: mysql.QueryError, result: mysql.RowDataPacket) => resolve(result)
     )
   );
 
-const createDBUsersTable = (connection) =>
+const createDBUsersTable = (connection: mysql.Connection) =>
   new Promise((resolve) =>
     connection.query(
       `
@@ -33,11 +37,11 @@ const createDBUsersTable = (connection) =>
           avatar VARCHAR(500) NOT NULL
       )
     `,
-      (_, result) => resolve(result)
+      (_: mysql.QueryError, result: mysql.RowDataPacket) => resolve(result)
     )
   );
 
-const createDBUsers = (connection) =>
+const createDBUsers = (connection: mysql.Connection) =>
   new Promise((resolve) =>
     connection.query(
       `
@@ -58,11 +62,11 @@ const createDBUsers = (connection) =>
           4, 'Cameron Lawrence', 'https://i.imgur.com/fAcyg0e.png'
       )
     `,
-      (_, result) => resolve(result)
+      (_: mysql.QueryError, result: mysql.RowDataPacket) => resolve(result)
     )
   );
 
-const createDBThreadsTable = (connection) =>
+const createDBThreadsTable = (connection: mysql.Connection) =>
   new Promise((resolve) =>
     connection.query(
       `
@@ -74,11 +78,11 @@ const createDBThreadsTable = (connection) =>
         constraint user_id FOREIGN KEY (id) REFERENCES users(id)
       )
     `,
-      (_, result) => resolve(result)
+      (_: mysql.QueryError, result: mysql.RowDataPacket) => resolve(result)
     )
   );
 
-const createDBThreads = (connection) =>
+const createDBThreads = (connection: mysql.Connection) =>
   new Promise((resolve) =>
     connection.query(
       `
@@ -92,11 +96,11 @@ const createDBThreads = (connection) =>
         1  
       )
     `,
-      (_, result) => resolve(result)
+      (_: mysql.QueryError, result: mysql.RowDataPacket) => resolve(result)
     )
   );
 
-const createDBCommentsTable = (connection) =>
+const createDBCommentsTable = (connection: mysql.Connection) =>
   new Promise((resolve) =>
     connection.query(
       `
@@ -116,11 +120,11 @@ const createDBCommentsTable = (connection) =>
         upvotes JSON NOT NULL
       )
     `,
-      (_, result) => resolve(result)
+      (_: mysql.QueryError, result: mysql.RowDataPacket) => resolve(result)
     )
   );
 
-const createDBComments = (connection) =>
+const createDBComments = (connection: mysql.Connection) =>
   new Promise((resolve) =>
     connection.query(
       `
@@ -157,11 +161,11 @@ const createDBComments = (connection) =>
           '[]'
       );
     `,
-      (_, result) => resolve(result)
+      (_: mysql.QueryError, result: mysql.RowDataPacket) => resolve(result)
     )
   );
 
-const createDBReplies = (connection) =>
+const createDBReplies = (connection: mysql.Connection) =>
   new Promise((resolve) =>
     connection.query(
       `
@@ -183,12 +187,12 @@ const createDBReplies = (connection) =>
         '[]'
     );
     `,
-      (_, result) => resolve(result)
+      (_: mysql.QueryError, result: mysql.RowDataPacket) => resolve(result)
     )
   );
 
-const setupDB = async (
-  connection,
+export const setupDB = async (
+  connection: mysql.Connection,
   {
     createDB,
     createUsersTable,
@@ -198,6 +202,15 @@ const setupDB = async (
     createCommentsTable,
     createComments,
     createReplies,
+  }: {
+    createDB?: boolean;
+    createUsersTable?: boolean;
+    createUsers?: boolean;
+    createThreadsTable?: boolean;
+    createThreads?: boolean;
+    createCommentsTable?: boolean;
+    createComments?: boolean;
+    createReplies?: boolean;
   }
 ) => {
   if (createDB) {
@@ -241,7 +254,7 @@ const setupDB = async (
   }
 };
 
-module.exports = {
+export default {
   USERS,
   setupDB,
 };
