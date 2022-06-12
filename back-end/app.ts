@@ -4,6 +4,8 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import express from "express";
 import demo from "./demo";
+import { Socket, Server } from "socket.io";
+import { createServer } from "http";
 import {
   SQLUserType,
   SQLCommentType,
@@ -21,6 +23,19 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*", // demo
+  },
+});
+
+io.on("connection", (socket: Socket) => {
+  socket.on("disconnect", () => {
+    console.log("disconnected");
+  });
+});
 
 const connection = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -216,6 +231,7 @@ app.post(
     const { threadId, parentId, text } = req.body;
     try {
       await addComment({ threadId, parentId, text });
+      io.sockets.emit("comment:add");
       res.send("Added comment");
     } catch (e) {
       console.log("Failed to add comment", e);
@@ -239,6 +255,7 @@ app.post(
       await removeCommentUpvote(commentId);
     }
 
+    io.sockets.emit("comment:upvote");
     res.send("success");
   }
 );
@@ -250,6 +267,7 @@ app.post("/reset", async (_: express.Request, res: express.Response) => {
       createComments: true,
       createReplies: true,
     });
+    io.sockets.emit("reset");
     res.send("Reset DB");
   } catch (e) {
     console.log("Failed to reset db", e);
@@ -257,4 +275,4 @@ app.post("/reset", async (_: express.Request, res: express.Response) => {
   }
 });
 
-app.listen(port);
+httpServer.listen(port);

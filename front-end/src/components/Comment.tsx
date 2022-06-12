@@ -40,7 +40,7 @@ function Comment({ comment }: { comment: CommentType }) {
         </div>
         <p className="comment__text">{comment.text}</p>
         <div className="comment__actions-container">
-          <div className="comment__actions">
+          <div className="comment__actions prevent-select">
             <div
               id={`upvote-${comment.id}`}
               className="comment__upvote"
@@ -61,7 +61,11 @@ function Comment({ comment }: { comment: CommentType }) {
           {isReplying && (
             <ClickAwayListener onClickAway={() => setIsReplying(false)}>
               <div className="add-reply">
-                <AddCommentForm pId={comment.id} isReply />
+                <AddCommentForm
+                  pId={comment.id}
+                  isReply
+                  onReply={() => setIsReplying(false)}
+                />
               </div>
             </ClickAwayListener>
           )}

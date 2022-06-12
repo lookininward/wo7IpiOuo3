@@ -4,7 +4,15 @@ import { UserType } from "../types";
 import { addComment } from "../api";
 import { UserContext } from "../contexts";
 
-function AddCommentForm({ pId, isReply }: { pId?: string; isReply?: boolean }) {
+function AddCommentForm({
+  pId,
+  isReply,
+  onReply,
+}: {
+  pId?: string;
+  isReply?: boolean;
+  onReply?: Function;
+}) {
   const user = useContext(UserContext) as UserType;
   const [threadId] = useState<string>("1");
   const [parentId] = useState<string | undefined>(pId);
@@ -14,6 +22,11 @@ function AddCommentForm({ pId, isReply }: { pId?: string; isReply?: boolean }) {
   const onAddComment = async (event: SyntheticEvent) => {
     event.preventDefault();
     await addComment({ threadId, parentId, text: commentText });
+    setCommentText("");
+
+    if (isReply && onReply) {
+      onReply();
+    }
   };
 
   const textInput = useRef<HTMLInputElement>(null);
