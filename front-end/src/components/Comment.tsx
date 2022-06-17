@@ -61,6 +61,37 @@ function Comment({ comment }: { comment: CommentType }) {
           {isReplying && (
             <ClickAwayListener onClickAway={() => setIsReplying(false)}>
               <div className="add-reply">
+                <div className="display-block-tablet">
+                  <div className="modal-header">
+                    Replying to @{comment.user.name}
+                    <div
+                      className="modal-header__close"
+                      onClick={() => setIsReplying(false)}
+                    >
+                      &times;
+                    </div>
+                  </div>
+                  <div className="comment comment--isolate">
+                    <div className="avatar-container">
+                      <img
+                        className="avatar-img"
+                        src={comment.user.avatar}
+                        alt={`${comment.user.name}-avatar`}
+                      />
+                    </div>
+                    <div className="comment__body">
+                      <div className="comment__header">
+                        <div className="comment__username">
+                          {comment.user.name}
+                        </div>
+                        <span className="comment__divider">•</span>
+                        <div className="comment__time">{comment.time}</div>
+                      </div>
+                      <p className="comment__text">{comment.text}</p>
+                    </div>
+                  </div>
+                </div>
+
                 <AddCommentForm
                   pId={comment.id}
                   isReply

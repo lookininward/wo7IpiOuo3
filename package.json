@@ -4,12 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "backend:build": "yarn workspace back-end build",
     "backend:seed": "node seed.js",
-    "backend:run": "node ./back-end/dist/app.js",
-    "frontend:run": "yarn workspace front-end run start",
-    "app:dev": "yarn workspace back-end dev && yarn run backend:seed && yarn run backend:run & yarn run frontend:run",
-    "app:start": "yarn workspace back-end build && yarn workspace back-end start && yarn run backend:seed && yarn run backend:run & yarn run frontend:run"
+    "app:start": "yarn workspace back-end dev && yarn run backend:seed && yarn workspace back-end start & yarn workspace front-end start"
   },
   "repository": {
     "type": "git",
