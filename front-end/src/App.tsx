@@ -20,6 +20,7 @@ function App() {
   const onGetComments = async () => {
     const comments: CommentType[] = await getComments();
     setComments(comments);
+    console.log(comments);
   };
 
   useEffect(() => {
